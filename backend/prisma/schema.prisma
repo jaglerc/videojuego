@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Player {
+  id          String   @id @default(uuid())
+  name        String
+  totalPoints Int      @default(0)
+  seeds       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  playerStands PlayerStand[]
+}
+
+model Stand {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  title     String
+
+  questions Question[]
+  playerStands PlayerStand[]
+}
+
+model Question {
+  id        String   @id @default(uuid())
+  text      String
+
+  stand     Stand    @relation(fields: [standId], references: [id])
+  standId   String
+
+  options   Option[]
+}
+
+model Option {
+  id          String   @id @default(uuid())
+  text        String
+  isCorrect   Boolean
+
+  question    Question @relation(fields: [questionId], references: [id])
+  questionId  String
+}
+
+model PlayerStand {
+  id             String  @id @default(uuid())
+  correctAnswers Int
+  completed      Boolean @default(false)
+
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String
+
+  stand    Stand  @relation(fields: [standId], references: [id])
+  standId  String
+
+  @@unique([playerId, standId])
+}
