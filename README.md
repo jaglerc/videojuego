@@ -1,18 +1,23 @@
-# Forest Game Backend
+# Forest Game
 
-## Descripción
+Proyecto completo del juego Forest Game compuesto por:
 
-API Backend construida con NestJS, Prisma ORM y PostgreSQL. Este proyecto gestiona entidades del juego como jugadores (players), stands y preguntas.
+- **Backend** — NestJS (TypeScript) + Prisma + PostgreSQL
+- **Frontend** — React + Vite (JavaScript)
+
+---
+
+# Backend
 
 ## Tecnologías
 
 - NestJS
+- TypeScript
 - Prisma ORM
 - PostgreSQL
-- TypeScript
 - Node.js
 
-## Requisitos
+## Requisitos Previos
 
 Instalar previamente:
 
@@ -44,7 +49,7 @@ brew services start postgresql
 
 **Windows**
 
-PostgreSQL se ejecuta como servicio automáticamente después de instalarlo. Puedes verificarlo en:
+PostgreSQL se ejecuta automáticamente como servicio después de instalarlo. Puedes verificarlo en:
 
 - Panel de Servicios → PostgreSQL
 - O desde pgAdmin conectándote al servidor.
@@ -78,7 +83,7 @@ ALTER SCHEMA public OWNER TO forest_user;
 \q
 ```
 
-## Instalación del Proyecto
+## Instalación del Backend
 
 1. **Clonar repositorio**
 
@@ -95,7 +100,7 @@ npm install
 
 3. **Configurar variables de entorno**
 
-Crear un archivo `.env` dentro de la carpeta backend:
+Crear archivo `.env` dentro de `backend/`:
 
 ```env
 DATABASE_URL="postgresql://forest_user:password@localhost:5432/forest_game"
@@ -111,13 +116,14 @@ Este comando:
 
 - Crea archivos de migración
 - Aplica los cambios a la base de datos
-- Genera el cliente de Prisma
+- Genera el cliente Prisma
 
-## Iniciar servidor en desarrollo
+## Iniciar Backend en desarrollo
 
 ```bash
 npm run start:dev
 ```
+
 
 ## Administración de Base de Datos
 
@@ -136,14 +142,45 @@ Dentro de `psql`:
 | `\l` | Listar bases de datos |
 | `\c forest_game` | Conectarse a una base |
 | `\dt` | Listar tablas |
-| `\d nombre_tabla` | Describir una tabla |
+| `\d nombre_tabla` | Describir tabla |
+| `\dn` | Listar esquemas |
+| `\df` | Listar funciones |
 | `\q` | Salir |
 
 ## Solución de Problemas
 
-Si ocurre un error de conexión:
+Si ocurre error de conexión:
 
 - Verificar que PostgreSQL esté en ejecución
 - Confirmar que `DATABASE_URL` tenga credenciales correctas
 - Verificar que el puerto `5432` esté disponible
 - Confirmar que la base de datos fue creada correctamente
+- Ejecutar nuevamente las migraciones
+
+---
+
+# Frontend — React + Vite
+
+El frontend está creado con React usando Vite y JavaScript. Se encuentra en la carpeta `frontend/`.
+
+## Instalación del Frontend
+
+1. **Ir a la carpeta frontend**
+
+```bash
+cd frontend
+```
+
+2. **Instalar dependencias**
+
+```bash
+npm install
+```
+
+3. **Ejecutar en desarrollo**
+
+```bash
+npm run dev
+```
+
+ `http://localhost:5173`.
