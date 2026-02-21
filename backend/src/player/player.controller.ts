@@ -1,0 +1,23 @@
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { PlayerService } from './player.service';
+import { CreatePlayerDto } from './dto/create-player.dto';
+
+@Controller('player')
+export class PlayerController {
+  constructor(private readonly playerService: PlayerService) {}
+
+  @Post()
+  create(@Body() dto: CreatePlayerDto) {
+    return this.playerService.create(dto);
+  }
+
+  @Get(':id')
+  findById(@Param('id') id: string) {
+    return this.playerService.findById(id);
+  }
+
+  @Get(':id/progress')
+getProgress(@Param('id') id: string) {
+  return this.playerService.getProgress(id);
+}
+}
