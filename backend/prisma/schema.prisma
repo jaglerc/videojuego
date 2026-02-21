@@ -7,53 +7,49 @@ datasource db {
 }
 
 model Player {
-  id          String   @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
-  totalPoints Int      @default(0)
-  seeds       Int      @default(0)
-  createdAt   DateTime @default(now())
-
+  totalPoints Int           @default(0)
+  seeds       Int           @default(0)
+  createdAt   DateTime      @default(now())
   playerStands PlayerStand[]
 }
 
 model Stand {
-  id        String   @id @default(uuid())
-  code      String   @unique
-  title     String
-
-  questions Question[]
+  id           String        @id @default(uuid())
+  code         String        @unique
+  title        String
+  description  String?
+  questions    Question[]
   playerStands PlayerStand[]
 }
 
 model Question {
-  id        String   @id @default(uuid())
-  text      String
-
-  stand     Stand    @relation(fields: [standId], references: [id])
-  standId   String
-
-  options   Option[]
+  id      String   @id @default(uuid())
+  text    String
+  order   Int      @default(0)
+  standId String
+  stand   Stand    @relation(fields: [standId], references: [id])
+  options Option[]
 }
 
 model Option {
-  id          String   @id @default(uuid())
-  text        String
-  isCorrect   Boolean
-
-  question    Question @relation(fields: [questionId], references: [id])
-  questionId  String
+  id         String   @id @default(uuid())
+  text       String
+  isCorrect  Boolean
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
 }
 
 model PlayerStand {
   id             String  @id @default(uuid())
   correctAnswers Int
   completed      Boolean @default(false)
-
-  player   Player @relation(fields: [playerId], references: [id])
-  playerId String
-
-  stand    Stand  @relation(fields: [standId], references: [id])
-  standId  String
+  seedEarned     Boolean @default(false)
+  playerId       String
+  standId        String
+  player         Player  @relation(fields: [playerId], references: [id])
+  stand          Stand   @relation(fields: [standId], references: [id])
 
   @@unique([playerId, standId])
 }
