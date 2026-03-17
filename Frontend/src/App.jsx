@@ -1,35 +1,77 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Welcome from './pages/Welcome'
+import Forest from './pages/Forest'
+import Quiz from './pages/Quiz'
+import Result from './pages/Result'
+import Final from './pages/Final'
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [screen, setScreen] = useState('welcome')
+  const [player, setPlayer] = useState(null)
+  const [progress, setProgress] = useState(null)
+  const [currentStand, setCurrentStand] = useState(null)
+  const [result, setResult] = useState(null)
+
+  const handleStart = (playerData) => {
+    setPlayer(playerData)
+    setScreen('forest')
+  }
+
+  const handleScanQR = (standCode) => {
+    if (standCode === 'finish') {
+      setScreen('final')
+      return
+    }
+    setCurrentStand(standCode)
+    setScreen('quiz')
+  }
+
+  const handleResult = (resultData) => {
+    setResult(resultData)
+    setScreen('result')
+  }
+
+  const handleContinue = async () => {
+    const { getProgress } = await import('./services/api')
+    const res = await getProgress(player.id)
+    setProgress(res.data)
+    if (res.data.finished) {
+      setScreen('final')
+    } else {
+      setScreen('forest')
+    }
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      {screen === 'welcome' && (
+        <Welcome onStart={handleStart} />
+      )}
+      {screen === 'forest' && (
+        <Forest
+          player={player}
+          onScanQR={handleScanQR}
+        />
+      )}
+      {screen === 'quiz' && (
+        <Quiz
+          player={player}
+          standCode={currentStand}
+          onResult={handleResult}
+        />
+      )}
+      {screen === 'result' && (
+        <Result
+          result={result}
+          onContinue={handleContinue}
+        />
+      )}
+      {screen === 'final' && (
+        <Final
+          player={player}
+          progress={progress}
+        />
+      )}
     </>
   )
 }
-
-export default App
