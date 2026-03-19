@@ -4,15 +4,17 @@ import HomePage from './pages/HomePage'
 import QuizPage from './pages/QuizPage'
 import QuizPreguntaUno from './pages/QuizPreguntaUno'
 import LogroPage from './pages/LogroPage'
+import ForestAnimation from './pages/ForestAnimation'
 
 export default function App() {
-    return (
-        <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/game" element={<RegisterPage />} />
-            <Route path="/instrucciones" element={<QuizPage />} />
-            <Route path="/quiz" element={<QuizPreguntaUno />} />
-            <Route path="/resultado" element={<LogroPage />} />
-        </Routes>
-    )
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/game" element={<RegisterPage />} />
+      <Route path="/instrucciones" element={<QuizPage />} />
+      <Route path="/quiz" element={<QuizPreguntaUno />} />
+      <Route path="/resultado" element={<LogroPage />} />
+      <Route path="/demo" element={<ForestAnimation />} />
+    </Routes>
+  )
 }
