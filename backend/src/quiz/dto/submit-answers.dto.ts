@@ -17,7 +17,7 @@ export class SubmitAnswersDto {
   standCode: string;
 
   @IsArray()
-  @ArrayMinSize(3)
+  @ArrayMinSize(1)
   @ArrayMaxSize(3)
   @ValidateNested({ each: true })
   @Type(() => AnswerDto)

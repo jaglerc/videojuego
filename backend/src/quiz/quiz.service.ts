@@ -32,7 +32,8 @@ export class QuizService {
       }
     }
 
-    const seedEarned = correctAnswers >= 2;
+    const totalQuestions = stand.questions.length;
+const seedEarned = correctAnswers >= Math.ceil(totalQuestions / 2);
 
     await this.prisma.playerStand.create({
       data: {
@@ -55,7 +56,7 @@ export class QuizService {
     return {
       correctAnswers,
       seedEarned,
-      message: seedEarned ? 'Ganaste una semilla' : 'No alcanzaste la semilla, necesitas al menos 2 respuestas correctas',
+      message: seedEarned ? 'Ganaste una semilla' : 'No lograste la semilla, intenta de nuevo',
     };
   }
 }
