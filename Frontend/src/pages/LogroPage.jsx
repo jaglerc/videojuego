@@ -13,9 +13,25 @@ export default function LogroPage() {
   const correctAnswers = result?.correctAnswers ?? 0
   const alreadyCompleted = result?.alreadyCompleted ?? false
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
+  const player = JSON.parse(localStorage.getItem('player'))
+  if (!player) {
+    navigate('/')
+    return
+  }
+
+  try {
+    const { getProgress } = await import('../services/api')
+    const res = await getProgress(player.id)
+    if (res.data.finished) {
+      navigate('/demo')
+    } else {
+      navigate('/game')
+    }
+  } catch (err) {
     navigate('/game')
   }
+}
 
   return (
     <div className="relative h-screen w-screen overflow-hidden font-sans">

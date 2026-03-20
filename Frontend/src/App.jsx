@@ -12,12 +12,13 @@ import FinalPage from './pages/FinalPage'
 export default function App() {
   return (
     <Routes>
-          <Route path="/" element={<AgradecimientoPage />} />
+      <Route path="/" element={<HomePage />} />
       <Route path="/game" element={<RegisterPage />} />
       <Route path="/instrucciones" element={<QuizPage />} />
       <Route path="/quiz" element={<QuizPreguntaUno />} />
       <Route path="/resultado" element={<LogroPage />} />
-      <Route path="/demo" element={<ForestAnimation />} />
+      <Route path="/demo" element={<AgradecimientoPage />} />
+      <Route path='/final' element={<FinalPage />} />
     </Routes>
   )
 }
