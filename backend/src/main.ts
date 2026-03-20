@@ -5,9 +5,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:5173', 'https://forest-game-scouts.netlify.app'],
-    methods: 'GET,POST,PUT,DELETE',
-  });
+  origin: ['http://localhost:5173', 'https://elaborate-cajeta-84beba.netlify.app'],
+  methods: 'GET,POST,PUT,DELETE',
+})
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   await app.listen(3000);
 }
