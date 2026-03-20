@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom'
 export default function HomePage() {
     const navigate = useNavigate()
 
-    const handleStart = () => {
-        navigate('/quiz')
-    }
+   const handleStart = () => {
+  navigate('/game')
+}
 
     return (
         <div className="relative h-screen w-screen overflow-hidden">
@@ -29,8 +29,9 @@ export default function HomePage() {
                     <img src={semillas} className="-mt-8"></img>
                 </div>
 
-                <button onClick={handleStart} className="text-white bg-[#0A3634] rounded-full p-2 mt-7 mb-10">Conseguir semillas</button>
-
+                <button onClick={handleStart} className="text-white bg-[#0A3634] rounded-full p-2 mt-7 mb-10">
+  ¡Listo, voy a escanear!
+</button>
 
             </div>
 
