@@ -5,11 +5,14 @@ import QuizPage from './pages/QuizPage'
 import QuizPreguntaUno from './pages/QuizPreguntaUno'
 import LogroPage from './pages/LogroPage'
 import ForestAnimation from './pages/ForestAnimation'
+import AgradecimientoPage from './pages/AgradecimientoPage'
+import FinalPage from './pages/FinalPage'
+
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<AgradecimientoPage />} />
       <Route path="/game" element={<RegisterPage />} />
       <Route path="/instrucciones" element={<QuizPage />} />
       <Route path="/quiz" element={<QuizPreguntaUno />} />

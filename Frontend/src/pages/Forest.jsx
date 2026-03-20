@@ -1,175 +1,98 @@
 import { useEffect, useState } from 'react'
 import { getProgress } from '../services/api'
+import fondoBosque from '../assets/fondoBosque.jpg'
+import arbolIndividual from '../assets/arbolIndividual.png'
 
 export default function Forest({ player, onScanQR }) {
-  const [progress, setProgress] = useState(null)
+    const [progress, setProgress] = useState(null)
 
-  useEffect(() => {
-    const fetchProgress = async () => {
-      const res = await getProgress(player.id)
-      setProgress(res.data)
-    }
-    fetchProgress()
-  }, [player.id])
+    useEffect(() => {
+        const fetchProgress = async () => {
+            try {
+                const res = await getProgress(player.id)
+                setProgress(res.data)
+            } catch (err) {
+                console.error("Error al cargar progreso:", err)
+            }
+        }
+        fetchProgress()
+    }, [player.id])
 
-  const stands = [
-    { code: 'stand-1', title: 'El Bosque Primario' },
-    { code: 'stand-2', title: 'La Selva Húmeda' },
-    { code: 'stand-3', title: 'Los Páramos' },
-  ]
+    const treesCount = progress?.seeds || 0
 
-  const isCompleted = (code) =>
-    progress?.completedStands?.some((s) => s.standCode === code)
+    // Definimos coordenadas (top, left) y escalas para que los árboles
+    // se vean naturales en el paisaje.
+    const treePositions = [
+        { top: '55%', left: '12%', scale: 'scale-110' }, // El grande de la izquierda
+        { top: '62%', left: '35%', scale: 'scale-75' },  // Uno mediano cerca del río
+        { top: '65%', left: '60%', scale: 'scale-90' },  // Otro en la llanura
+        { top: '58%', left: '80%', scale: 'scale-50' },  // Uno pequeño al fondo
+    ]
 
-  const trees = progress?.seeds || 0
+    return (
+        <div className="relative h-screen w-screen overflow-hidden bg-[#1a3a2a]">
+            {/* 1. FONDO BASE (El que no tiene árboles) */}
+            <img
+                src={fondoBosque}
+                alt="Paisaje base"
+                className="absolute inset-0 w-full h-full object-cover z-0"
+            />
 
-  return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <p style={styles.greeting}>Hola, {player.name}</p>
-        <div style={styles.seedsRow}>
-          {[...Array(3)].map((_, i) => (
-            <span key={i} style={styles.tree}>
-              {i < trees ? '🌳' : '🌱'}
-            </span>
-          ))}
-        </div>
-        <p style={styles.points}>
-          {progress?.totalPoints || 0} puntos
-        </p>
-      </div>
-
-      <div style={styles.card}>
-        <p style={styles.instructions}>
-          Visita los stands del evento, escanea el QR y responde las preguntas para ganar semillas
-        </p>
-      </div>
-
-      <div style={styles.standsList}>
-        {stands.map((stand) => (
-          <div key={stand.code} style={{
-            ...styles.standItem,
-            opacity: isCompleted(stand.code) ? 0.5 : 1,
-          }}>
-            <div style={styles.standInfo}>
-              <span style={styles.standIcon}>
-                {isCompleted(stand.code) ? '✅' : '🔍'}
-              </span>
-              <span style={styles.standTitle}>{stand.title}</span>
+            {/* 2. CAPA DE ÁRBOLES DINÁMICOS */}
+            <div className="absolute inset-0 z-10 pointer-events-none">
+                {treePositions.map((pos, index) => (
+                    <img
+                        key={index}
+                        src={arbolIndividual}
+                        alt="Árbol crecido"
+                        className={`absolute transition-all duration-1000 ease-out ${pos.scale}`}
+                        style={{
+                            top: pos.top,
+                            left: pos.left,
+                            // Si el índice es menor a las semillas recolectadas, se muestra, si no, escala 0 y opacidad 0
+                            opacity: index < treesCount ? 1 : 0,
+                            transform: index < treesCount ? 'translateY(0) scale(1)' : 'translateY(20px) scale(0)',
+                        }}
+                    />
+                ))}
             </div>
-            {isCompleted(stand.code) ? (
-              <span style={styles.completedTag}>Completado</span>
-            ) : (
-              <button
-                style={styles.scanButton}
-                onClick={() => onScanQR(stand.code)}
-              >
-                Escanear QR
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
 
-      {progress?.finished && (
-        <button style={styles.finishButton} onClick={() => onScanQR('finish')}>
-          Ver resultado final
-        </button>
-      )}
-    </div>
-  )
-}
+            {/* 3. INTERFAZ DE USUARIO (Tus textos y botones) */}
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-between py-10 px-6 bg-black/20">
+                <div className="text-center">
+                    <h1 className="text-white font-extrabold text-2xl uppercase drop-shadow-lg">
+                        Tu Bosque
+                    </h1>
+                    <p className="text-[#a8d5b5] font-bold">
+                        {treesCount} Semillas Germinadas
+                    </p>
+                </div>
 
-const styles = {
-  container: {
-    minHeight: '100vh',
-    padding: '2rem 1.5rem',
-    background: 'linear-gradient(180deg, #1a3a2a 0%, #0f2318 100%)',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '1.5rem',
-  },
-  greeting: {
-    fontSize: '1.3rem',
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: '1rem',
-  },
-  seedsRow: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '1rem',
-    fontSize: '2.5rem',
-    marginBottom: '0.5rem',
-  },
-  tree: {
-    transition: 'all 0.3s',
-  },
-  points: {
-    color: '#a8d5b5',
-    fontSize: '1rem',
-  },
-  card: {
-    background: 'rgba(255,255,255,0.08)',
-    borderRadius: '12px',
-    padding: '1rem 1.5rem',
-    marginBottom: '1.5rem',
-  },
-  instructions: {
-    color: '#a8d5b5',
-    textAlign: 'center',
-    fontSize: '0.9rem',
-    lineHeight: '1.5',
-  },
-  standsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '0.8rem',
-  },
-  standItem: {
-    background: 'rgba(255,255,255,0.08)',
-    borderRadius: '12px',
-    padding: '1rem 1.2rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  standInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.8rem',
-  },
-  standIcon: {
-    fontSize: '1.3rem',
-  },
-  standTitle: {
-    color: '#ffffff',
-    fontSize: '0.95rem',
-  },
-  completedTag: {
-    color: '#a8d5b5',
-    fontSize: '0.8rem',
-  },
-  scanButton: {
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
-    border: 'none',
-    background: '#2d6a4f',
-    color: '#ffffff',
-    fontSize: '0.85rem',
-    cursor: 'pointer',
-  },
-  finishButton: {
-    marginTop: '2rem',
-    width: '100%',
-    padding: '1rem',
-    borderRadius: '12px',
-    border: 'none',
-    background: '#2d6a4f',
-    color: '#ffffff',
-    fontSize: '1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-  },
+                {/* Card de progreso (similar a tu estilo) */}
+                <div className="w-full max-w-[300px] bg-[#0a4a43]/85 border-[4px] border-white rounded-[20px] p-4 text-center">
+                    <p className="text-white text-[11px] font-semibold">
+                        {treesCount === 0
+                            ? "Escanea códigos QR para empezar a reforestar el valle."
+                            : "¡Excelente! El cambio está ocurriendo paso a paso."}
+                    </p>
+
+                    <div className="flex justify-center gap-2 mt-4">
+                        {/* Indicador visual de semillas */}
+                        {[...Array(3)].map((_, i) => (
+                            <span key={i} className="text-xl">
+                                {i < treesCount ? '🌳' : '🌱'}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
+                <button
+                    onClick={() => onScanQR('general')}
+                    className="bg-white text-[#0A4A43] font-extrabold text-xs px-8 py-3 rounded-full uppercase shadow-xl active:scale-95 transition-transform"
+                >
+                    Escanear Nuevo QR
+                </button>
+            </div>
+        </div>
+    )
 }
