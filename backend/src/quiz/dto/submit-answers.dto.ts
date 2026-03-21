@@ -18,7 +18,7 @@ export class SubmitAnswersDto {
 
   @IsArray()
   @ArrayMinSize(1)
-  @ArrayMaxSize(3)
+  @ArrayMaxSize(8)
   @ValidateNested({ each: true })
   @Type(() => AnswerDto)
   answers: AnswerDto[];

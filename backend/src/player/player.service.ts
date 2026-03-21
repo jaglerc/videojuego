@@ -39,7 +39,7 @@ export class PlayerService {
       correctAnswers: ps.correctAnswers,
       seedEarned: ps.seedEarned,
     })),
-    finished: player.seeds >= 3,
+    finished: player.playerStands.length >= 3,
   };
 }
 
